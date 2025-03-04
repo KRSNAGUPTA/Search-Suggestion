@@ -66,13 +66,17 @@ class TrieService {
     console.log("Trie initialized with database words.");
   }
 
-  addWord(word, WordModel) {
+  async addWord(word, WordModel) {
     this.trie.insert(word);
-    WordModel.findOneAndUpdate(
-      { word },
-      { $inc: { freq: 1 } },
-      { upsert: true, new: true }
-    ).catch((err) => console.error(err));
+    try {
+      await WordModel.findOneAndUpdate(
+        { word },
+        { $inc: { freq: 1 } },
+        { upsert: true, new: true }
+      );
+    } catch (err) {
+      console.error("Failed to insert word in DB:", err);
+    }
   }
 
   getSuggestions(prefix) {
