@@ -18,6 +18,7 @@ app.get("/", (req, res) => {
   return res.status(200).json("API is working");
 });
 app.post("/insert", async (req, res) => {
+  console.log("Adding word....")
   const { word } = req.body;
   console.log("Got body:", req.body);
 
@@ -27,6 +28,7 @@ app.post("/insert", async (req, res) => {
 
   try {
     trieService.addWord(word, Word);
+    console.log( `Word ${word} added`)
     return res.status(200).json({ message: `Added ${word}` });
   } catch (error) {
     console.error("Failed to insert word:", error);
