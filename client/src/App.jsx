@@ -13,7 +13,7 @@ const SearchSuggestionApp = () => {
     google: "https://www.google.com/search?q=",
     bing: "https://www.bing.com/search?q=",
     brave: "https://search.brave.com/search?q=",
-    mozilla: "https://search.brave.com/search?p=",
+    yahoo: "https://search.yahoo.com/search?p=",
   };
 
   const debounce = (fn, delay) => {
@@ -32,11 +32,10 @@ const SearchSuggestionApp = () => {
     setIsLoading(true);
     try {
       const res = await api.get(`/suggest?p=${term}`);
-      if (!res.data.length) {
-        await api.post("/insert", {
-          word: term,
-        });
-      }
+      await api.post("/insert", {
+        word: term,
+      });
+
       setSuggestions(res.data);
     } catch (error) {
       console.error("Error fetching suggestions:", error);
@@ -67,7 +66,12 @@ const SearchSuggestionApp = () => {
               Find what you're looking for
             </p>
           </div>
-          <Search className="w-8 h-8 text-white" />
+          <Search
+            className="w-8 h-8 text-white hover:cursor-pointer"
+            onClick={() =>
+              (window.location.href = `${searchEngine[selectedEngine]}${searchTerm}`)
+            }
+          />
         </div>
 
         <div className="p-4">
@@ -97,13 +101,11 @@ const SearchSuggestionApp = () => {
           </div>
 
           {isLoading && (
-            <div className="text-center text-gray-500 animate-pulse">
-              Loading suggestions...
-            </div>
+            <div className="text-center text-gray-500 animate-pulse">{""}</div>
           )}
 
           {suggestions.length > 0 && (
-            <div className="border border-gray-200 rounded-lg overflow-hidden shadow-sm max-h-64 overflow-y-auto z-20">
+            <div className=" min-w-xl border border-gray-200 rounded-lg overflow-hidden shadow-sm max-h-64 overflow-y-auto z-20">
               {suggestions.map((suggestion, index) => (
                 <div
                   key={index}
