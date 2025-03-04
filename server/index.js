@@ -33,13 +33,13 @@ app.post("/insert", async (req, res) => {
   }
 });
 app.get("/suggest", (req, res) => {
-  const { prefix } = req.query;
-  if (!prefix) {
+  const { p } = req.query;
+  if (!p) {
     return res.status(400).json({
       message: "Prefix not provided",
     });
   }
-  const suggestion = trieService.getSuggestions(prefix);
+  const suggestion = trieService.getSuggestions(p);
   res.status(200).json(suggestion);
 });
 app.listen(PORT, () => {
