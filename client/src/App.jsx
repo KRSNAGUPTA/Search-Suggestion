@@ -13,7 +13,7 @@ const SearchSuggestionApp = () => {
     google: "https://www.google.com/search?q=",
     bing: "https://www.bing.com/search?q=",
     brave: "https://search.brave.com/search?q=",
-    yahoo: "https://search.yahoo.com/search?p=",
+    mozilla: "https://search.brave.com/search?p=",
   };
 
   const debounce = (fn, delay) => {
@@ -31,7 +31,7 @@ const SearchSuggestionApp = () => {
     }
     setIsLoading(true);
     try {
-      const res = await api.get(`/suggest?p=${term}`);
+      const res = await api.get(`/suggest?p=${term.toLowerCase()}`);
       await api.post("/insert", {
         word: term,
       });
@@ -66,12 +66,7 @@ const SearchSuggestionApp = () => {
               Find what you're looking for
             </p>
           </div>
-          <Search
-            className="w-8 h-8 text-white hover:cursor-pointer"
-            onClick={() =>
-              (window.location.href = `${searchEngine[selectedEngine]}${searchTerm}`)
-            }
-          />
+          <Search className="w-8 h-8 text-white" />
         </div>
 
         <div className="p-4">
@@ -101,11 +96,13 @@ const SearchSuggestionApp = () => {
           </div>
 
           {isLoading && (
-            <div className="text-center text-gray-500 animate-pulse">{""}</div>
+            <div className="text-center text-gray-500 animate-pulse">
+              Loading suggestions...
+            </div>
           )}
 
           {suggestions.length > 0 && (
-            <div className=" min-w-xl border border-gray-200 rounded-lg overflow-hidden shadow-sm max-h-64 overflow-y-auto z-20">
+            <div className="min-w-xl border border-gray-200 rounded-lg overflow-hidden shadow-sm max-h-64 overflow-y-auto z-20">
               {suggestions.map((suggestion, index) => (
                 <div
                   key={index}
@@ -126,7 +123,7 @@ const SearchSuggestionApp = () => {
                   <span className="flex-grow truncate">{suggestion}</span>
                   <ArrowRight
                     className={`
-                      w-5 h-5 ml-2 transition-transform duration-200
+                      w-5 h-5 ml-2 mr-6 transition-transform duration-200
                       ${
                         hoveredSuggestion === index
                           ? "translate-x-1 text-blue-700"
